@@ -43,7 +43,7 @@ cat > job.json <<-EOJSON
         "env_id": "$env_id",
         "env_type": "notebook",
         "env_variables": [
-            "CPD_URL=$cpd_url",
+            "CPD_URL=https://cpd-cpd-instance.apps.demo.ibmdte.net",
             "DATA_ASSET_ID=$training_data_asset_id",
             "MODEL_NAME=$model_name"
         ]
