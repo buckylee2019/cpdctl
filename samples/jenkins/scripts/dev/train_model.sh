@@ -12,7 +12,7 @@ job_name=train-scikit-model-job
 model_name=gcr-scikit-model
 trained_model_id_file=./trained_model_id
 
-export CPD_SCOPE=cpd://cpd/projects/$PROJECT_ID
+export CPD_SCOPE=cpd402-demo://cpd402-demo/projects/$PROJECT_ID
 
 find_asset () {
   echo "Searching for $1 with name: $2..." >&2
