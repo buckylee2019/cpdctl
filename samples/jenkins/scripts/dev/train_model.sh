@@ -44,8 +44,6 @@ cat > job.json <<-EOJSON
         "env_type": "notebook",
         "env_variables": [
             "CPD_URL=$cpd_url",
-            "USER_NAME=$user_name",
-            "USER_APIKEY=$user_apikey",
             "DATA_ASSET_ID=$training_data_asset_id",
             "MODEL_NAME=$model_name"
         ]
