@@ -30,10 +30,10 @@ notebook_id=$(find_asset notebook "train_model")
 env_id=$(cpdctl environment list --output json -j "resources[?metadata.name=='$env_name'] | [0].metadata.asset_id" --raw-output)
 echo "Using notebook environment '$env_name': $env_id"
 
-cpd_url=$(cpdctl config profile get cpd --output json -j 'Profile.URL' --raw-output)
+cpd_url=$(cpdctl config profile get context_cpd402-demo_profile --output json -j 'Profile.URL' --raw-output)
 # assume there is only single user configured
 user_name=$(cpdctl config user list --output json -j '[0].Name' --raw-output)
-user_apikey=$(cpdctl config user get demouser --output json -j "User.Apikey.Value" --raw-output)
+user_apikey=$(cpdctl config user get context_cpd402-demo_user --output json -j "User.Apikey.Value" --raw-output)
 
 cat > job.json <<-EOJSON
 {
