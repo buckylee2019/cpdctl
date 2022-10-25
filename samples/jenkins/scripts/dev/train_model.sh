@@ -55,7 +55,8 @@ EOJSON
 
 echo Staring job $job_name...
 
-job_run=$(cpdctl job run create --job '@./job.json' --job-run '{}' --async --output json)
+# job_run=$(cpdctl job run create --job '@./job.json' --job-run '{}' --async --output json)
+job_run=$(cpdctl job run create  --job-run '{}' --async --output json)
 
 job_id=$(echo $job_run | jq '.entity.job_run.job_ref' -r)
 run_id=$(echo $job_run | jq '.metadata.asset_id' -r)
