@@ -2,9 +2,9 @@ node {
     withCredentials([file(credentialsId: 'CPDCTL_CPD402_CONFIG', variable: 'CPDCONFIG')]) {
         checkout scm
 
-        // stage('Install cpdctl') {
-        //     sh 'bash -e ./samples/jenkins/scripts/helpers/install_cpdctl.sh'
-        // }
+        stage('Install cpdctl') {
+            sh 'bash -e ./samples/jenkins/scripts/helpers/install_cpdctl.sh'
+        }
 
         stage('Train model') {
             sh 'bash -e ./samples/jenkins/scripts/dev/train_model.sh'
