@@ -35,6 +35,7 @@ cpd_url=$(cpdctl config profile get context_cpd402-demo_profile --output json -j
 user_name=$(cpdctl config user list --output json -j '[0].Name' --raw-output)
 user_apikey=$(cpdctl config user get context_cpd402-demo_user --output json -j "User.Apikey.Value" --raw-output)
 
+rm job.json
 cat > job.json <<-EOJSON
 {
     "name": "$job_name",
@@ -51,6 +52,7 @@ cat > job.json <<-EOJSON
 }
 EOJSON
 
+cat job.json
 echo Staring job $job_name...
 
 job_run=$(cpdctl job run create --job '@./job.json' --job-run '{}' --async --output json)
