@@ -56,6 +56,8 @@ promote_asset "trained model" $trained_model_id
 promote_asset "regression data asset" $regression_data_asset_id
 promote_asset "evaluation script" $evaluation_script_id
 
+cpdctl asset attribute update --space-id "$DEV_SPACE_ID" --asset-id "$evaluation_script_id" --attribute-key script  --json-patch '@./softwarespec.json'
+
 export CPD_SCOPE=cpd://cpd402-demo/spaces/$DEV_SPACE_ID
 
 cpdctl asset search --query '*:*' --type-name asset
