@@ -9,7 +9,7 @@ export PATH=$PATH:$PWD
 
 export_file=./dev-space-assets.zip
 
-export CPD_SCOPE=cpd://cpd/spaces/$DEV_SPACE_ID
+export CPD_SCOPE=cpd://cpd402-demo/spaces/$DEV_SPACE_ID
 
 # TODO: replace the below code with:
 # cpdctl asset export start --assets '{"all_assets": true}' --name dev-space-all-assets --output-file "$export_file"

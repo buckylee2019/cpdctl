@@ -20,7 +20,7 @@ trained_model_id_file=./trained_model_id
 
 echo Cleaning up the project...
 
-export CPD_SCOPE=cpd://cpd/projects/$PROJECT_ID
+export CPD_SCOPE=cpd://cpd402-demo/projects/$PROJECT_ID
 trained_model_id=$(<${trained_model_id_file})
 
 echo Deleting trained model: $trained_model_id...
@@ -31,7 +31,7 @@ rm -f run.json
 
 echo Cleaning up the development space...
 
-export CPD_SCOPE=cpd://cpd/spaces/$DEV_SPACE_ID
+export CPD_SCOPE=cpd://cpd402-demo/spaces/$DEV_SPACE_ID
 model_id=$(find_asset wml_model "$model_name")
 regression_data_asset_id=$(find_asset data_asset "credit_risk_regression.csv")
 evaluation_script_id=$(find_asset script "evaluate_model*")

@@ -11,7 +11,7 @@ env_name=jupconda38
 job_name=train-scikit-model-job
 trained_model_id_file=./trained_model_id
 
-export CPD_SCOPE=cpd://cpd/projects/$PROJECT_ID
+export CPD_SCOPE=cpd://cpd402-demo/projects/$PROJECT_ID
 
 find_asset () {
   echo "Searching for $1 with name: $2..." >&2
