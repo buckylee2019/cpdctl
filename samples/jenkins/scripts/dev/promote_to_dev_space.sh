@@ -47,7 +47,7 @@ cat > softwarespec.json <<-EOJSON
 ]
 EOJSON
 
-cpdctl asset attribute update --space-id "$DEV_SPACE_ID" --asset-id "$evaluation_script_id" --attribute-key script  --json-patch '@./softwarespec.json'
+# cpdctl asset attribute update --space-id "$DEV_SPACE_ID" --asset-id "$evaluation_script_id" --attribute-key script  --json-patch '@./softwarespec.json'
 
 
 
