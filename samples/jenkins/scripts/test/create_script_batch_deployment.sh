@@ -23,7 +23,10 @@ test_space_id=$(<${test_space_id_file})
 imported_model_id=$(find_asset wml_model "gcr-scikit-model" $test_space_id)
 imported_script_id=$(find_asset script "evaluate_model*" $test_space_id)
 imported_regression_data_asset_id=$(find_asset data_asset "credit_risk_regression.csv" $test_space_id)
-
+echo "cpdctl ml deployment create --space-id "$test_space_id" \
+  --name $deployment_name --asset '{"id": "'$imported_script_id'"}' \
+  --hardware-spec '{"name": "S"}' --batch '{}' --output json -j "metadata.id" --raw-output)"
+  
 script_batch_deployment_id=$(cpdctl ml deployment create --space-id "$test_space_id" \
   --name $deployment_name --asset '{"id": "'$imported_script_id'"}' \
   --hardware-spec '{"name": "S"}' --batch '{}' --output json -j "metadata.id" --raw-output)
