@@ -35,6 +35,6 @@ promote_asset "trained model" $trained_model_id
 promote_asset "regression data asset" $regression_data_asset_id
 promote_asset "evaluation script" $evaluation_script_id
 
-export CPD_SCOPE=cpd://cpd/spaces/$DEV_SPACE_ID
+export CPD_SCOPE=cpd://cpd402-demo/spaces/$DEV_SPACE_ID
 
 cpdctl asset search --query '*:*' --type-name asset
