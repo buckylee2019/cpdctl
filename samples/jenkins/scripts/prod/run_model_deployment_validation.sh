@@ -19,6 +19,23 @@ find_asset () {
 prod_evaluation_script_id=$(find_asset script "evaluate_model*")
 
 evaluate_model_job_id=$(find_asset job "evaluate_model_job")
+software_specification_name='runtime-22.1-py3.9'
+software_id=$(cpdctl environment software-specification list --space-id "$PROD_SPACE_ID" --name "$software_specification_name" --output json --jmes-query 'resources[0].metadata.asset_id' --raw-output)
+
+cat > softwarespec.json <<-EOJSON
+[
+  {
+    "op": "add",
+    "path": "/software_spec",
+    "value": {
+    "base_id": "$software_id",
+    "name": "$software_specification_name"
+  }
+}
+]
+EOJSON
+
+cpdctl asset attribute update --space-id "$PROD_SPACE_ID" --asset-id "$prod_evaluation_script_id" --attribute-key script  --json-patch '@./softwarespec.json'
 
 echo "Run starting for a job: $evaluate_model_job_id..."
 
