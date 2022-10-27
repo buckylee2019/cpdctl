@@ -7,7 +7,7 @@ node {
         }
 
         stage('Import assets') {
-            copyArtifacts fingerprintArtifacts: true, projectName: 'mlops-dev-1027', selector: lastSuccessful()
+            copyArtifacts fingerprintArtifacts: true, projectName: 'mlops-dev-1027', selector: lastSuccess()
             sh 'bash -e ./samples/jenkins/scripts/test/create_test_space.sh'
         }
 
