@@ -7,7 +7,7 @@ export PATH=$PATH:$PWD
 
 export_file=./dev-space-assets.zip
 
-export CPD_SCOPE=cpd://cpd/spaces/$PROD_SPACE_ID
+export CPD_SCOPE=cpd://cpd402-demo/spaces/$PROD_SPACE_ID
 
 ls -al
 unzip -l ${export_file}

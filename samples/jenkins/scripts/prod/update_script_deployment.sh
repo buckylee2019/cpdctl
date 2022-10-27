@@ -9,7 +9,7 @@ deployment_name="script-batch-deployment"
 results_path='prod_job_results.zip'
 evaluation_output_name=evaluation_result.zip
 
-export CPD_SCOPE=cpd://cpd/spaces/$PROD_SPACE_ID
+export CPD_SCOPE=cpd://cpd402-demo/spaces/$PROD_SPACE_ID
 
 find_asset () {
   echo "Searching for $1 with name: $2..." >&2

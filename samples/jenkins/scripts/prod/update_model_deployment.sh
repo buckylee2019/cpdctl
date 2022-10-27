@@ -5,7 +5,7 @@ export PATH=$PATH:$PWD
 # $PROD_SPACE_ID - ID of the production deployment space
 #
 
-export CPD_SCOPE=cpd://cpd/spaces/$PROD_SPACE_ID
+export CPD_SCOPE=cpd://cpd402-demo/spaces/$PROD_SPACE_ID
 
 prod_model_id=$(cpdctl asset search --query '*:*' --type-name wml_model --output json \
   --jmes-query "results[0].metadata.asset_id" --raw-output)

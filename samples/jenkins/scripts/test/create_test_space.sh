@@ -22,6 +22,6 @@ test_space_id=$(<${test_space_id_file})
 
 echo "Test space '${test_space_name}' created: ${test_space_id}"
 
-export CPD_SCOPE=cpd://cpd/spaces/$test_space_id
+export CPD_SCOPE=cpd://cpd402-demo/spaces/$test_space_id
 
 cpdctl asset import start --import-file ${export_file}
