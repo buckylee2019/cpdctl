@@ -3,7 +3,7 @@ export PATH=$PATH:$PWD
 #
 # Expected environment variables:
 #
-
+software_specification_name='runtime-22.1-py3.9'
 job_name='evaluate_model_batch_deployment_job'
 deployment_name='evaluate_model_batch_deployment'
 results_path='job_results.zip'
@@ -23,13 +23,28 @@ test_space_id=$(<${test_space_id_file})
 imported_model_id=$(find_asset wml_model "gcr-scikit-model" $test_space_id)
 imported_script_id=$(find_asset script "evaluate_model*" $test_space_id)
 imported_regression_data_asset_id=$(find_asset data_asset "credit_risk_regression.csv" $test_space_id)
-echo "cpdctl ml deployment create --space-id "$test_space_id" \
-  --name $deployment_name --asset '{"id": "'$imported_script_id'"}' \
-  --hardware-spec '{"name": "S"}' --batch '{}' --output json -j "metadata.id" --raw-output)"
-cpdctl environment software-specification list --space-id "$test_space_id" 
+software_id=$(cpdctl environment software-specification list --space-id "$test_space_id" --name "$software_specification_name" --output json --jmes-query 'resources[0].metadata.asset_id' --raw-output)
+
+cat > softwarespec.json <<-EOJSON
+[
+  {
+    "op": "add",
+    "path": "/software_spec",
+    "value": {
+    "base_id": "$software_id",
+    "name": "$software_specification_name"
+  }
+}
+]
+EOJSON
+
+cpdctl asset attribute update --space-id "$test_space_id" --asset-id "$imported_script_id" --attribute-key script  --json-patch '@./softwarespec.json'
+
+
 script_batch_deployment_id=$(cpdctl ml deployment create --space-id "$test_space_id" \
   --name $deployment_name --asset '{"id": "'$imported_script_id'"}' \
   --hardware-spec '{"name": "S"}' --batch '{}' --output json -j "metadata.id" --raw-output)
+
 
 echo "Batch deployment: $script_batch_deployment_id created for an asset: $imported_script_id..."
 
