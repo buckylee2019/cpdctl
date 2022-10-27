@@ -26,13 +26,13 @@ imported_regression_data_asset_id=$(find_asset data_asset "credit_risk_regressio
 echo "cpdctl ml deployment create --space-id "$test_space_id" \
   --name $deployment_name --asset '{"id": "'$imported_script_id'"}' \
   --hardware-spec '{"name": "S"}' --batch '{}' --output json -j "metadata.id" --raw-output)"
-  
+
 script_batch_deployment_id=$(cpdctl ml deployment create --space-id "$test_space_id" \
   --name $deployment_name --asset '{"id": "'$imported_script_id'"}' \
   --hardware-spec '{"name": "S"}' --batch '{}' --output json -j "metadata.id" --raw-output)
 
 echo "Batch deployment: $script_batch_deployment_id created for an asset: $imported_script_id..."
-
+cpdctl environment software-specification list --space-id "$test_space_id" 
 cat > scoring.json <<-EOJSON
  {
     "input_data_references": [
