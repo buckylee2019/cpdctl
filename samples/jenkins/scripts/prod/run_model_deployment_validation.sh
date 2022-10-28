@@ -25,7 +25,7 @@ prod_model_id=$(cpdctl asset search --query '*:*' --type-name wml_model --output
   --jmes-query "results[0].metadata.asset_id" --raw-output)
 evaluate_model_job_id=$(find_asset job "evaluate_model_job")
 
-if [ "$evaluate_model_job_id" == "null" ]
+if [ "$evaluate_model_job_id" == "null"]
 then
 script_batch_deployment_id=$(cpdctl ml deployment list --space-id "$PROD_SPACE_ID" --asset-id "$prod_model_id"  --output json --jmes-query 'resources[0].metadata.id' --raw-output)
 
@@ -63,12 +63,12 @@ while [[ "$job_id" == "" || "$job_id" == "null" ]]; do
   deployment_job=$(cpdctl ml deployment-job get --space-id "$PROD_SPACE_ID" --job-id "$deployment_script_job_id" \
     --output json)
 
-  evaluate_model_job_id=$(echo $deployment_job | jq '.entity.platform_job.job_id' -r)
+  job_id=$(echo $deployment_job | jq '.entity.platform_job.job_id' -r)
   run_id=$(echo $deployment_job | jq '.entity.platform_job.run_id' -r)
 
   sleep 1
 done
-
+evaluate_model_job_id=$job_id
 fi
 software_specification_name='runtime-22.1-py3.9'
 software_id=$(cpdctl environment software-specification list --space-id "$PROD_SPACE_ID" --name "$software_specification_name" --output json --jmes-query 'resources[0].metadata.asset_id' --raw-output)
