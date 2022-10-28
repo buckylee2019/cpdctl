@@ -5,7 +5,7 @@ export PATH=$PATH:$PWD
 # $PROD_SPACE_ID - ID of the production deployment space
 #
 
-export CPD_SCOPE=cpd://cpd/spaces/$PROD_SPACE_ID
+export CPD_SCOPE=cpd://cpd402-demo/spaces/$PROD_SPACE_ID
 export_file=./evaluation_result.zip
 
 find_asset () {
