@@ -21,30 +21,31 @@ prod_model_id=$(cpdctl asset search --query '*:*' --type-name wml_model --output
   --jmes-query "results[0].metadata.asset_id" --raw-output)
 evaluate_model_job_id=$(find_asset job "evaluate_model_job")
 
-script_batch_deployment_id=$(cpdctl ml deployment list --space-id "$PROD_SPACE_ID" --asset-id "$prod_model_id"  --output json --jmes-query 'metadata.id' --raw-output)
+script_batch_deployment_id=$(cpdctl ml deployment list --space-id "$PROD_SPACE_ID" --asset-id "$prod_model_id"  --output json -j 'metadata.id' --raw-output)
+
 echo "Script Batch Deploy id: $script_batch_deployment_id"
-# cat > scoring.json <<-EOJSON
-#  {
-#     "input_data_references": [
-#       {
-#         "type": "data_asset",
-#         "id": "input",
-#         "connection": {},
-#         "location": {
-#           "href": "/v2/assets/$imported_regression_data_asset_id?space_id=$test_space_id"
-#         }
-#       }
-#     ],
-#     "output_data_reference": {
-#       "type": "data_asset",
-#       "id": "output",
-#       "connection": {},
-#       "location": {
-#         "name": "$evaluation_output_name"
-#       }
-#     }
-# }
-# EOJSON
+cat > scoring.json <<-EOJSON
+ {
+    "input_data_references": [
+      {
+        "type": "data_asset",
+        "id": "input",
+        "connection": {},
+        "location": {
+          "href": "/v2/assets/$imported_regression_data_asset_id?space_id=$test_space_id"
+        }
+      }
+    ],
+    "output_data_reference": {
+      "type": "data_asset",
+      "id": "output",
+      "connection": {},
+      "location": {
+        "name": "$evaluation_output_name"
+      }
+    }
+}
+EOJSON
 
 # echo "Starting job $job_name..."
 
