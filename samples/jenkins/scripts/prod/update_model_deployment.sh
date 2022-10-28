@@ -21,6 +21,8 @@ then
   --jmes-query "resources[0].metadata.rev" --raw-output)
 fi
 
+echo "Revision ID : $prod_model_rev"
+
 prod_model_batch_deployment_id=$(cpdctl ml deployment list --asset-id "$prod_model_id" --output json \
 --jmes-query "resources[0].metadata.id" --raw-output)
 echo "Batch deployment id: $prod_model_batch_deployment_id"
