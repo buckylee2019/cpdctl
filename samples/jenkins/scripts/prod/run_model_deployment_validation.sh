@@ -17,10 +17,11 @@ find_asset () {
 }
 
 prod_evaluation_script_id=$(find_asset script "evaluate_model*")
-
+prod_model_id=$(cpdctl asset search --query '*:*' --type-name wml_model --output json \
+  --jmes-query "results[0].metadata.asset_id" --raw-output)
 evaluate_model_job_id=$(find_asset job "evaluate_model_job")
 
-script_batch_deployment_id=$(cpdctl ml deployment list --space-id "$PROD_SPACE_ID" --name 'model_batch_deployment'  --output json --jmes-query 'metadata.id' --raw-output)
+script_batch_deployment_id=$(cpdctl ml deployment list --space-id "$PROD_SPACE_ID" --asset-id "$prod_model_id"  --output json --jmes-query 'metadata.id' --raw-output)
 echo "Script Batch Deploy id: $script_batch_deployment_id"
 # cat > scoring.json <<-EOJSON
 #  {
