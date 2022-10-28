@@ -15,17 +15,17 @@ prod_model_rev=$(cpdctl ml model list-revisions --model-id "$prod_model_id" --ou
   --jmes-query "resources[0].metadata.rev" --raw-output)
 echo "Model revision: $prod_model_rev"
 
-if ["$prod_model_rev"=="null"] 
+if [ "$prod_model_rev" == "null" ] 
 then
   prod_model_rev=$(cpdctl ml model create-revision --model-id "$prod_model_id" --space-id "$PROD_SPACE_ID" --output json \
   --jmes-query "resources[0].metadata.rev" --raw-output)
 fi
 
-  prod_model_batch_deployment_id=$(cpdctl ml deployment list --asset-id "$prod_model_id" --output json \
-  --jmes-query "resources[0].metadata.id" --raw-output)
+prod_model_batch_deployment_id=$(cpdctl ml deployment list --asset-id "$prod_model_id" --output json \
+--jmes-query "resources[0].metadata.id" --raw-output)
 echo "Batch deployment id: $prod_model_batch_deployment_id"
 
-if ["$prod_model_batch_deployment_id"=="null"] 
+if [ "$prod_model_batch_deployment_id" == "null" ] 
 then
 prod_model_batch_deployment_id=$(cpdctl ml deployment create --space-id "$PROD_SPACE_ID" --name 'model_batch_deployment'\
   --asset '{"id": "'$prod_model_id'"}' --hardware-spec '{"name": "S"}' --batch '{}' \
