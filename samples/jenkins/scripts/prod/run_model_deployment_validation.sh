@@ -23,7 +23,7 @@ imported_regression_data_asset_id=$(find_asset data_asset "credit_risk_regressio
 prod_evaluation_script_id=$(find_asset script "evaluate_model*")
 prod_model_id=$(cpdctl asset search --query '*:*' --type-name wml_model --output json \
   --jmes-query "results[0].metadata.asset_id" --raw-output)
-evaluate_model_job_id=$(find_asset job "evaluate_model_job")
+evaluate_model_job_id=$(find_asset job "evaluate_model_batch_deployment_job")
 
 if [ "$evaluate_model_job_id" == "null" ]
 then
@@ -81,7 +81,7 @@ EOJSON
 cpdctl asset attribute update --space-id "$PROD_SPACE_ID" --asset-id "$prod_evaluation_script_id" --attribute-key script  --json-patch '@./softwarespec.json'
 
 echo "Run starting for a job: $evaluate_model_job_id..."
-run_id=$(cpdctl job run create --space-id "$PROD_SPACE_ID" --job-id "$job_id" --job-run '{}' --output json --jmes-query '{jmes_query}' --raw-output)
+run_id=$(cpdctl job run create --space-id "$PROD_SPACE_ID" --job-id "$evaluate_model_job_id" --job-run '{}' --output json --jmes-query '{jmes_query}' --raw-output)
 #cpdctl job run create --job-id "$evaluate_model_job_id" --job-run '{}' --space-id $PROD_SPACE_ID
 cpdctl job run wait --job-id "$evaluate_model_job_id" --run-id "$run_id" --space-id "$PROD_SPACE_ID"
 echo "Finish running!"
