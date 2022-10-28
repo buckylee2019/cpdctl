@@ -23,7 +23,7 @@ imported_regression_data_asset_id=$(find_asset data_asset "credit_risk_regressio
 prod_evaluation_script_id=$(find_asset script "evaluate_model*")
 prod_model_id=$(cpdctl asset search --query '*:*' --type-name wml_model --output json \
   --jmes-query "results[0].metadata.asset_id" --raw-output)
-evaluate_model_job_id=$(find_asset job "evaluate_model_batch_deployment_job")
+evaluate_model_job_id=$(find_asset job "evaluate_model_job")
 
 if [ "$evaluate_model_job_id" == "null" ]
 then
@@ -54,7 +54,7 @@ script_batch_deployment_id=$(cpdctl ml deployment list --space-id "$PROD_SPACE_I
 # EOJSON
 
 echo "Starting job $job_name..."
-
+cpdctl asset search --space-id "$PROD_SPACE_ID" --query '*:*' --type-name asset
 # deployment_script_job_id=$(cpdctl ml deployment-job create wait --space-id "$PROD_SPACE_ID" --name "$job_name" \
 #   --deployment '{"id": "'$script_batch_deployment_id'"}' --scoring '@./scoring.json' --output json -j "metadata.id" \
 #   --raw-output)
