@@ -25,8 +25,8 @@ prod_model_id=$(cpdctl asset search --query '*:*' --type-name wml_model --output
   --jmes-query "results[0].metadata.asset_id" --raw-output)
 evaluate_model_job_id=$(find_asset job "evaluate_model_job")
 
-if [ "$evaluate_model_job_id" == "null" ]
-then
+# if [ "$evaluate_model_job_id" == "null" ]
+# then
 script_batch_deployment_id=$(cpdctl ml deployment list --space-id "$PROD_SPACE_ID" --asset-id "$prod_model_id"  --output json --jmes-query 'resources[0].metadata.id' --raw-output)
 
 # echo "Script Batch Deploy id: $script_batch_deployment_id"
