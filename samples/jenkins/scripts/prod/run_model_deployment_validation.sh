@@ -24,7 +24,7 @@ echo "Run starting for a job: $evaluate_model_job_id..."
 
 cpdctl job run create --job-id "$evaluate_model_job_id" --job-run '{}'
 
-results_asset_id=$(find_asset data_asset "evaluation_result.zip")
+results_asset_id=$(find_asset data_asset "model_evaluation_result.zip.csv")
 
 results_attachment_id=$(cpdctl asset get --asset-id $results_asset_id --output json --jmes-query "attachments[-1].id" --raw-output)
 
