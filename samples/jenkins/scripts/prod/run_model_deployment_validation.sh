@@ -9,7 +9,7 @@ export CPD_SCOPE=cpd://cpd402-demo/spaces/$PROD_SPACE_ID
 export_file=./evaluation_result.zip
 evaluation_output_name=model_evaluation_result.zip
 job_name='evaluate_model_batch_deployment_job'
-
+results_path='job_results.zip'
 find_asset () {
   echo "Searching for $1 with name: $2..." >&2
   asset_id=$(cpdctl asset search --type-name $1 --query "asset.name:$2" \
@@ -53,46 +53,62 @@ script_batch_deployment_id=$(cpdctl ml deployment list --space-id "$PROD_SPACE_I
 # }
 # EOJSON
 
-echo "Starting job $job_name..."
-cpdctl asset search --space-id "$PROD_SPACE_ID" --query '*:*' --type-name asset
-# deployment_script_job_id=$(cpdctl ml deployment-job create wait --space-id "$PROD_SPACE_ID" --name "$job_name" \
-#   --deployment '{"id": "'$script_batch_deployment_id'"}' --scoring '@./scoring.json' --output json -j "metadata.id" \
-#   --raw-output)
-job_id=$(cpdctl ml deployment-job list --deployment-id "$script_batch_deployment_id" --space-id "$PROD_SPACE_ID" --output json --jmes-query 'resources[0].entity.platform_job.job_id' --raw-output)
-
-evaluate_model_job_id=$job_id
-fi
-software_specification_name='runtime-22.1-py3.9'
-software_id=$(cpdctl environment software-specification list --space-id "$PROD_SPACE_ID" --name "$software_specification_name" --output json --jmes-query 'resources[0].metadata.asset_id' --raw-output)
-
-cat > softwarespec.json <<-EOJSON
-[
-  {
-    "op": "add",
-    "path": "/software_spec",
-    "value": {
-    "base_id": "$software_id",
-    "name": "$software_specification_name"
-  }
+cat > scoring.json <<-EOJSON
+ {
+    "input_data_references": [
+      {
+        "type": "data_asset",
+        "id": "input",
+        "connection": {},
+        "location": {
+          "href": "/v2/assets/$imported_regression_data_asset_id?space_id=$PROD_SPACE_ID"
+        }
+      }
+    ],
+    "output_data_reference": {
+      "type": "data_asset",
+      "id": "output",
+      "connection": {},
+      "location": {
+        "name": "$evaluation_output_name"
+      }
+    }
 }
-]
 EOJSON
 
-cpdctl asset attribute update --space-id "$PROD_SPACE_ID" --asset-id "$prod_evaluation_script_id" --attribute-key script  --json-patch '@./softwarespec.json'
+echo "Starting job $job_name..."
 
-echo "Run starting for a job: $evaluate_model_job_id..."
-run_id=$(cpdctl job run create --space-id "$PROD_SPACE_ID" --job-id "$evaluate_model_job_id" --job-run '{}' --output json --jmes-query '{jmes_query}' --raw-output)
-#cpdctl job run create --job-id "$evaluate_model_job_id" --job-run '{}' --space-id $PROD_SPACE_ID
-cpdctl job run wait --job-id "$evaluate_model_job_id" --run-id "$run_id" --space-id "$PROD_SPACE_ID"
-echo "Finish running!"
-results_asset_id=$(find_asset data_asset "evaluation_result.zip")
+deployment_script_job_id=$(cpdctl ml deployment-job create wait --space-id "$test_space_id" --name "$job_name" \
+  --deployment '{"id": "'$script_batch_deployment_id'"}' --scoring '@./scoring.json' --output json -j "metadata.id" \
+  --raw-output)
 
-results_attachment_id=$(cpdctl asset get --asset-id $results_asset_id --output json --jmes-query "attachments[-1].id" --raw-output)
+while [[ "$job_id" == "" || "$job_id" == "null" ]]; do
+  deployment_job=$(cpdctl ml deployment-job get --space-id "$PROD_SPACE_ID" --job-id "$deployment_script_job_id" \
+    --output json)
 
-echo "Downloading: evaluation_result.zip to the $export_file..."
+  job_id=$(echo $deployment_job | jq '.entity.platform_job.job_id' -r)
+  run_id=$(echo $deployment_job | jq '.entity.platform_job.run_id' -r)
 
-cpdctl asset attachment download --asset-id "$results_asset_id" --attachment-id "$results_attachment_id" --output-path "${export_file}"
+  sleep 1
+done
 
-echo "Unziping $export_file"
+echo "Run: $run_id started for a job: $job_id..."
 
-unzip -p ${export_file}
+cpdctl job run wait --job-id "$job_id" --run-id "$run_id" --space-id "$PROD_SPACE_ID"
+
+output_data_asset_id=$(cpdctl asset search --space-id "$PROD_SPACE_ID" --type-name data_asset \
+  --query "$evaluation_output_name" --output json --jmes-query "results[0].metadata.asset_id" --raw-output)
+
+echo "Results : $output_data_asset_id for a run: $run_id..."
+
+results_attachment_id=$(cpdctl asset get --space-id "$PROD_SPACE_ID" --asset-id "$output_data_asset_id" \
+  --output json --jmes-query "attachments[-1].id" --raw-output)
+
+echo "Downloading: $evaluation_output_name to the $results_path..."
+
+cpdctl asset attachment download --space-id "$PROD_SPACE_ID" --asset-id "$output_data_asset_id" \
+  --attachment-id "$results_attachment_id" --output-path "$results_path"
+
+echo "Unziping $results_path to results.txt"
+
+unzip -p "$results_path" results.txt
