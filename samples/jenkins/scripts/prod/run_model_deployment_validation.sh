@@ -22,8 +22,8 @@ prod_model_id=$(cpdctl asset search --query '*:*' --type-name wml_model --output
 evaluate_model_job_id=$(find_asset job "evaluate_model_job")
 
 script_batch_deployment_id=$(cpdctl ml deployment list --space-id "$PROD_SPACE_ID" --asset-id "$prod_model_id"  --output json -j 'metadata.id' --raw-output)
-
-echo "Script Batch Deploy id: $script_batch_deployment_id"
+cpdctl ml deployment list --space-id "$PROD_SPACE_ID"
+#echo "Script Batch Deploy id: $script_batch_deployment_id"
 cat > scoring.json <<-EOJSON
  {
     "input_data_references": [
