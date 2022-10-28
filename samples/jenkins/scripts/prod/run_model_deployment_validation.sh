@@ -90,8 +90,8 @@ cpdctl asset attribute update --space-id "$PROD_SPACE_ID" --asset-id "$prod_eval
 
 echo "Run starting for a job: $evaluate_model_job_id..."
 
-cpdctl job run create --job-id "$evaluate_model_job_id" --job-run '{}'
-
+cpdctl job run create --job-id "$evaluate_model_job_id" --job-run '{}' --space-id $PROD_SPACE_ID
+echo "Finish running!"
 results_asset_id=$(find_asset data_asset "evaluation_result.zip")
 
 results_attachment_id=$(cpdctl asset get --asset-id $results_asset_id --output json --jmes-query "attachments[-1].id" --raw-output)
