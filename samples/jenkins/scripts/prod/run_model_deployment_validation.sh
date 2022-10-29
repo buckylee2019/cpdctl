@@ -23,8 +23,6 @@ evaluate_model_job_id=$(find_asset job "evaluate_model_job")
 echo "Run starting for a job: $evaluate_model_job_id..."
 
 cpdctl job run create --job-id "$evaluate_model_job_id" --job-run '{}'
-output_data_asset_id=$(cpdctl asset search --space-id "$test_space_id" --type-name data_asset \
-  --query "$evaluation_output_name" --output json --jmes-query "results[0].metadata.asset_id" --raw-output)
 
 results_asset_id=$(find_asset data_asset "model_evaluation_result.zip")
 
