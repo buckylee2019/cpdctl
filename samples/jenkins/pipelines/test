@@ -21,6 +21,7 @@ node {
 
         stage('Cleanup') {
             sh 'bash -e ./samples/jenkins/scripts/test/cleanup.sh'
+            archiveArtifacts artifacts: '*.zip', fingerprint: true
         }
     }
 }
