@@ -5,9 +5,9 @@ export PATH=$PATH:$PWD
 # $PROD_SPACE_ID - ID of the production deployment space
 #
 
-deployment_name="script-batch-deployment"
+deployment_name="script_batch_deployment"
 results_path='prod_job_results.zip'
-evaluation_output_name=evaluation_result.zip
+evaluation_output_name=model_evaluation_result.zip
 
 export CPD_SCOPE=cpd://cpd402-demo/spaces/$PROD_SPACE_ID
 
@@ -19,10 +19,10 @@ find_asset () {
   echo $asset_id
 }
 
-prod_evaluation_script_id=$(find_asset script 'evaluate_model')
+prod_evaluation_script_id=$(find_asset script 'evaluate_model*')
 echo "Evaluation script id: $prod_evaluation_script_id"
 
-prod_script_deployment_id=$(cpdctl ml deployment list --name "$deployment_name" --output json \
+prod_script_deployment_id=$(cpdctl ml deployment list --name "$deployment_name" --space-id "$PROD_SPACE_ID" --output json \
   --jmes-query 'resources[0].metadata.id' --raw-output)
 echo "Existing production deployment ID: $prod_script_deployment_id"
 
